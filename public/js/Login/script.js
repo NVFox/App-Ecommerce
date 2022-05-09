@@ -10,7 +10,7 @@ let allButtons = document.querySelectorAll(".submit");
 
 let getButtons = (e) => e.preventDefault()
 
-let changeForm = (e) => {
+let changeForm = () => {
 
     switchCtn.classList.add("is-gx");
     setTimeout(function(){
@@ -28,11 +28,11 @@ let changeForm = (e) => {
     bContainer.classList.toggle("is-z200");
 }
 
-let mainF = (e) => {
-    for (var i = 0; i < allButtons.length; i++)
-        allButtons[i].addEventListener("click", getButtons );
-    for (var i = 0; i < switchBtn.length; i++)
-        switchBtn[i].addEventListener("click", changeForm)
+let mainF = () => {
+    for (const element of allButtons)
+        element.addEventListener("click", getButtons );
+    for (const item of switchBtn)
+        item.addEventListener("click", changeForm)
 }
 
 window.addEventListener("load", mainF);

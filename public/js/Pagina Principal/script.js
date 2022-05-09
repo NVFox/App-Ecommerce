@@ -190,12 +190,13 @@ const updatePoppersTimeout = () => {
 document.getElementById("btn-collapse").addEventListener("click", () => {
   SIDEBAR_EL.classList.toggle("collapsed");
   PoppersInstance.closePoppers();
-  if (SIDEBAR_EL.classList.contains("collapsed"))
-  FIRST_SUB_MENUS_BTN.forEach(element => {
-    element.parentElement.classList.remove("open");
-  });
-
-  updatePoppersTimeout();
+  if (SIDEBAR_EL.classList.contains("collapsed")) {
+    FIRST_SUB_MENUS_BTN.forEach(element => {
+      element.parentElement.classList.remove("open");
+    });
+  
+    updatePoppersTimeout();
+  }
 });
 
 /**
@@ -225,19 +226,20 @@ defaultOpenMenus.forEach(element => {
  */
 FIRST_SUB_MENUS_BTN.forEach(element => {
   element.addEventListener("click", () => {
-    if (SIDEBAR_EL.classList.contains("collapsed"))
-    PoppersInstance.togglePopper(element.nextElementSibling);else
-    {
+    if (SIDEBAR_EL.classList.contains("collapsed")) {
+      PoppersInstance.togglePopper(element.nextElementSibling);
+    } else {
       const parentMenu = element.closest(".menu.open-current-submenu");
-      if (parentMenu)
-      parentMenu.
-      querySelectorAll(":scope > ul > .menu-item.sub-menu > a").
-      forEach(
-      (el) =>
-      window.getComputedStyle(el.nextElementSibling).display !==
-      "none" && slideUp(el.nextElementSibling));
-
-      slideToggle(element.nextElementSibling);
+      if (parentMenu) {
+        parentMenu.
+        querySelectorAll(":scope > ul > .menu-item.sub-menu > a").
+        forEach(
+        (el) =>
+        window.getComputedStyle(el.nextElementSibling).display !==
+        "none" && slideUp(el.nextElementSibling));
+  
+        slideToggle(element.nextElementSibling); 
+        }
     }
   });
 });
