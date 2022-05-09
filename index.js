@@ -5,7 +5,11 @@ const mysql = require('mysql');
 const myConnection = require('express-myconnection');
 const ejs = require("ejs");
 
-const rutas = require("./routes/routes");
+app.use(morgan("dev"));
+
+app.engine('html', ejs.renderFile);
+app.set('view engine', 'html');
+app.use(express.static("public"));
 
 const PORT = 4000; 
 const dbOptions = {
@@ -17,13 +21,9 @@ const dbOptions = {
 };
   
 app.use(myConnection(mysql, dbOptions, 'pool'));
-app.use(morgan("dev"));
 
+const rutas = require("./routes/routes");
 app.use("/", rutas);
-
-app.engine('html', ejs.renderFile);
-app.set('view engine', 'html');
-app.use(express.static("public"));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
