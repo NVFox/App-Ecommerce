@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/Formulario/formulario.css">
+    <title>E-commerce</title>
+</head>
+<body>
+    <%- include('./partials/header', {pages: pages, isIndex: false}) %>
+    
+    <section class="real-section">
+        <% if (Object.keys(model).length) { %>
+            <div class="section">
+
+                <div id="conta">
+            
+            <form action="<%= `/data/${nombreTabla}` %>"  method="POST" autocomplete="off" class="none">
+            
+              <div class="container alt-container">
+        
+                    <legend>Formulario de <%= nombreTabla %></legend>
+        
+                    <% Object.keys(model).map(key => { %>
+                        <% if (Array.isArray(model[key])) { %>
+                            <select name="<%= key %>" id="select-<%= key %>">
+                                <% model[key].map(item => { %>          
+                                    <option value="<%= item %>"><%= item %></option>
+                                <% }) %>
+                            </select>
+                        <% } else { %>
+                            <input class="form-input" id="input-<%= key %>" name="<%= key %>" type="<%= model[key] %>" placeholder="<%= `${key.substring(0, 1).toUpperCase()}${key.substring(1)}` %>">
+                        <% } %>
+                    <% }) %>
+                        
+                    <input  type="submit"  value="INGRESAR"   name="btning" class="btning boton" ></input>
+                    <input  type="submit"  value="ELIMINAR"   name="btneli" class="btneli boton" ></input>
+                    <input  type="submit"  value="ACTUALIZAR" name="btnact" class="btnact boton" ></input>
+            
+                    <input class="form__button button submit boton"  type="submit" value="CONSULTAR">
+        
+                    </div>
+            
+                  </div>
+        
+            </form>
+            </div>
+        <% } %>
+
+        <table>
+            <thead>
+                <tr>
+                <% Object.keys(data[0]).map(item => { %>
+                    <th><%= `${item.substring(0, 1).toUpperCase()}${item.substring(1)}` %></th>
+                <% }) %>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.map(item => { %>
+                    <tr>
+                        <% Object.values(item).map(value => { %>
+                            <td><%= value %></td>
+                        <% }) %>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>

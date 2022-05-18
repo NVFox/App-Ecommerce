@@ -10,7 +10,14 @@ const query = (qr, conn) => new Promise((resolve, reject) => {
     })
 })
 
+const queryWithParams = (qr, params, conn) => new Promise((resolve, reject) => {
+    conn.query(qr, params, (err, results) => {
+        err ? reject(err) : resolve(results);
+    })
+})
+
 module.exports = { 
     connection: connection,
-    query: query 
+    query: query,
+    queryWithParams: queryWithParams
 }
