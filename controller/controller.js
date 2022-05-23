@@ -81,7 +81,7 @@ module.exports = {
                     const results = rol === "Administrador" ? await query(consultas[rol][tabla], conn)
                     : await queryWithParams(consultas[rol][tabla], [idUsuario], conn);
 
-                    const modelRol = await replaceObjectValues(model[rol], idUsuario, conn);
+                    const modelRol = model ? await replaceObjectValues(model[rol], idUsuario, conn) : undefined;
 
                     res.render("formulario", {
                         nombreTabla: tabla,
@@ -98,5 +98,9 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    cerrarSesion: (req, res) => {
+        req.session.destroy();
+        res.redirect("/");
     }
 }

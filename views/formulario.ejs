@@ -15,7 +15,7 @@
     <%- include('./partials/header', {pages: pages, isIndex: false}) %>
     
     <section class="real-section">
-        <% if (Object.keys(model).length) { %>
+        <% if (Object.keys(model).length && !(model == "no existe")) { %>
             <div class="section">
 
                 <div id="conta">

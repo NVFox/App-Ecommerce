@@ -49,7 +49,7 @@ models.peticiones = {
         idDetalle: {
             tabla: "detallesventa",
             campo: "idDetalle",
-            args: "WHERE idVenta IN (SELECT idVenta * FROM ventas WHERE idComprador = ?)"
+            args: "WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?)"
         },
         asunto: "text",
         descripcion: "text",
@@ -65,7 +65,7 @@ consultas.Administrador = {
 
 consultas.Vendedor = {
     articulos: `SELECT * FROM articulos WHERE idVendedor = ?`,
-    detallesventa: `SELECT idDetalle FROM detallesventa WHERE idArticulo IN (SELECT idArticulo FROM articulos WHERE idVendedor = ?)`,
+    detallesventa: `SELECT * FROM detallesventa WHERE idArticulo IN (SELECT idArticulo FROM articulos WHERE idVendedor = ?)`,
     peticiones: `SELECT * FROM peticiones WHERE idDetalle IN (SELECT idDetalle FROM detallesventa WHERE idArticulo IN (SELECT idArticulo FROM articulos WHERE idVendedor = ?))`
 }
 

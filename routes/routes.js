@@ -9,4 +9,6 @@ router.get("/login", controller.renderLogin);
 router.get("/data/:tabla", controller.renderFormulario);
 router.post("/login/verify", controller.realizarLogin);
 
+router.get("/cerrar", controller.cerrarSesion);
+
 module.exports = router;
