@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="/css/Producto/producto.css">
+    <title>Detalle</title>
+</head>
+<body>
+    <%- include('./partials/header', {pages: pages, isIndex: false}) %>
+
+<div class="info">
+    <div class="container columna_1">
+        <div class="img">
+            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="producto">
+        </div>
+    </div>
+    <div class="container columna_2" >
+        <div class="detalle">
+            <div class="compra">
+                <h2><%= data.nombre %></h2>
+            </div>
+            <div class="compra">
+                <h3>$ <%= data.valorTotal %></h3>
+            </div>
+            <div class="compra">
+                <p><%= data.descripcion %></p>
+            </div>
+        </div>
+    </div>
+    <div class="container columna_3">
+
+        <div class="compra">
+            <img src="https://www.finlit.es/wp-content/uploads/2017/06/Tipos-de-tarjetas-bancarias-e1509829454298.jpg" alt="bancos">
+        </div>
+
+        <div class="compra">
+            <span class="bi bi-truck"></span>
+            <span class="demo-text">Envio Gratis A Nivel Nacional</span><p></p>
+        </div>
+
+        <div class="compra">
+            <span><i class="bi bi-geo-alt-fill"></i></span>
+            <span class="demo-text"><a class="enlace" href="#">Cuando LLegara</a></span><p></p>
+        </div>
+
+        <div class="compra">
+            <span><i class="bi bi-bag-plus-fill"></i></span>
+            <span class="demo-text">Cantidad: <span> 1 Unidad </span> N (Disponibles)</span>
+        </div>
+            
+        <div class="compra-1">
+            <input type="button" value="Comprar" class="btn" id="btn">
+            <input type="button" value="Agregar al Carrito" class="btn-1" id="btn">   
+        </div>
+
+        <div class="compra">
+            <span><i class="bi bi-arrow-90deg-left"></i></span>
+            <span class="demo-text">Devolucion </span> <span> tienes 30 dias desde que lo aquieres </span>
+        </div>
+
+        <div class="compra">
+            <span><i class="bi bi-shield-fill"></i></span>
+            <span class="demo-text">Compra </span> <span> protegida  </span>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

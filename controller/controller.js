@@ -99,6 +99,28 @@ module.exports = {
             console.log(err);
         }
     },
+    obtenerProducto: async (req, res) => {
+        const { id } = req.params;
+        try {
+            if (req.session.loggedIn) {
+                const { rol } = req.session.dataLogin;
+                const conn = await connection(req);
+                const results = await queryWithParams("SELECT a.*, u.nombreUsuario, u.correo, u.numeroTelefono FROM articulos a INNER JOIN usuarios u ON a.idVendedor = u.idUsuario WHERE idArticulo = ?", [id], conn);
+                res.render("producto", {
+                    data: results[0],
+                    pages: Object.keys(consultas[rol])
+                })
+            } else {
+                res.redirect("/login");
+            }
+            
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    renderCarrito: (req, res) => {
+        req.session.loggedIn ? res.render("carrito", {pages: Object.keys(consultas[req.session.dataLogin["rol"]])}) : res.redirect("/login")
+    },
     cerrarSesion: (req, res) => {
         req.session.destroy();
         res.redirect("/");

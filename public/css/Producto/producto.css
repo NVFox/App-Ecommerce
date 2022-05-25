@@ -1,0 +1,183 @@
+.info{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+}
+.columna_1{
+    width: 40%;
+    height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 40px #CFF4D2;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+}
+.img{
+    width: 90%;
+}
+.columna_2{
+    width: 30%;
+    height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 40px #CFF4D2;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+}
+.detalle{
+    width: 80%;
+    height: 80%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    text-align: center;
+}
+
+.columna_3{
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 40px #CFF4D2;
+    padding: 30px;
+    width: 30%;
+    align-items: center;
+    justify-content: center;
+}
+
+.detalle h2 {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.detalle h3 {
+    font-size: 36px;
+}
+
+.compra img{
+    width: 120px;
+    border-radius: 12px;
+}
+.compra{
+    margin-top: 20px;
+}
+
+.compra-1{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.demo-text .bi-truck{
+    clear: left;
+    text-align: right;
+    vertical-align: middle;
+    line-height: 15px;
+    color: green;
+}
+.bi-truck{
+    color: green;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    
+}
+
+.demo-text .enlace{
+    clear: left;
+    text-align: right;
+    vertical-align: middle;
+    line-height: 15px;
+    color: blue;
+    text-decoration: none;
+}
+.bi-geo-alt-fill{
+    color: blue;
+}
+
+.demo-text .bi-bag-plus-fill{
+    clear: left;
+    text-align: right;
+    vertical-align: middle;
+    line-height: 15px;
+    color: green;
+}
+.bi-bag-plus-fill{
+    color: green;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+}
+
+span.bi-truck{
+    display: inline-block;
+    vertical-align: top;
+}
+span .bi-geo-alt-fill{
+    display: inline-block;
+    vertical-align: top;
+}
+span .bi-geo-plus-fill{
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+.btn{
+    background-color: rgb(43, 61, 226);
+    height: 40px;
+    border-radius: 12px;
+    border: solid 2px black;
+    color: snow;
+    text-align: center;
+    padding: 5px 0;
+    width: 90%;
+    margin-top: 20px;
+    cursor: pointer;
+}
+.btn:hover{
+    background-color: rgb(242, 238, 12);
+    height: 40px;
+    border: solid 2px black;
+    color: black;
+    transition: ease-in-out 100ms;
+}
+.btn-1{
+    background-color: rgb(150, 160, 253);
+    height: 40px;
+    border-radius: 12px;
+    border: solid 2px black;
+    color: snow;
+    text-align: center;
+    width: 90%;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.btn-1:hover{
+    background-color: rgb(245, 243, 135);
+    height: 40px;
+    border: solid 2px black;
+    color: black;
+    transition: ease-in-out 100ms;
+}
+
+@media (max-width: 870px) {
+    .info{
+        flex-direction: column;
+        align-items: center;
+    }
+    .columna_1{
+        width: 90%;
+    }
+    .columna_2{
+        width: 90%
+    }   
+    .columna_3{
+        width: 90%;
+    }
+}
