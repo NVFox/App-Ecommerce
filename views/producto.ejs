@@ -23,13 +23,13 @@
     </div>
     <div class="container columna_2" >
         <div class="detalle">
-            <div class="compra">
+            <div class="compra nombre-producto">
                 <h2><%= data.nombre %></h2>
             </div>
-            <div class="compra">
+            <div class="compra valor">
                 <h3>$ <%= data.valorTotal %></h3>
             </div>
-            <div class="compra">
+            <div class="compra descripcion">
                 <p><%= data.descripcion %></p>
             </div>
         </div>
@@ -47,17 +47,17 @@
 
         <div class="compra">
             <span><i class="bi bi-geo-alt-fill"></i></span>
-            <span class="demo-text"><a class="enlace" href="#">Cuando LLegara</a></span><p></p>
+            <span class="demo-text"><a class="enlace nombre-vendedor" href="#">Vendido por: <%= data.nombreVendedor %></a></span><p></p>
         </div>
 
         <div class="compra">
             <span><i class="bi bi-bag-plus-fill"></i></span>
-            <span class="demo-text">Cantidad: <span> 1 Unidad </span> N (Disponibles)</span>
+            <span class="demo-text">Cantidad: <span><input type="number" value="1" name="cantidad" id="input-cantidad"></span> N (Disponibles)</span>
         </div>
             
         <div class="compra-1">
-            <input type="button" value="Comprar" class="btn" id="btn">
-            <input type="button" value="Agregar al Carrito" class="btn-1" id="btn">   
+            <input type="button" value="Comprar" class="btn" id="btn-direct">
+            <input type="button" value="Agregar al Carrito" class="btn-1" id="btn-carrito">   
         </div>
 
         <div class="compra">
@@ -73,8 +73,7 @@
     </div>
 </div>
 
-
-
+<script src="/js/DetalleProducto/producto.js"></script>
 
 </body>
 </html>

@@ -105,11 +105,15 @@ module.exports = {
             if (req.session.loggedIn) {
                 const { rol } = req.session.dataLogin;
                 const conn = await connection(req);
-                const results = await queryWithParams("SELECT a.*, u.nombreUsuario, u.correo, u.numeroTelefono FROM articulos a INNER JOIN usuarios u ON a.idVendedor = u.idUsuario WHERE idArticulo = ?", [id], conn);
-                res.render("producto", {
-                    data: results[0],
-                    pages: Object.keys(consultas[rol])
-                })
+                const results = await queryWithParams("SELECT a.*, u.nombreUsuario AS nombreVendedor, u.correo, u.numeroTelefono FROM articulos a INNER JOIN usuarios u ON a.idVendedor = u.idUsuario WHERE idArticulo = ?", [id], conn);
+                if (req.query?.request) {
+                    res.json(results[0]);
+                } else {
+                    res.render("producto", {
+                        data: results[0],
+                        pages: Object.keys(consultas[rol])
+                    })
+                }
             } else {
                 res.redirect("/login");
             }
