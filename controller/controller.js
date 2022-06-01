@@ -1,5 +1,8 @@
+const { get } = require("express/lib/request");
 const { connection, query, queryWithParams } = require("../connection/connection");
 const { models, consultas } = require("../models/models");
+
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
 const replaceObjectValues = async (object, idUsuario, conn) => {
     const modelRol = {...object};
@@ -15,6 +18,25 @@ const replaceObjectValues = async (object, idUsuario, conn) => {
     })
 
     return modelRol
+}
+
+const getLastId = async (table, conn) => {
+    try {
+        const lastId = await query(`SELECT COUNT(*) AS lastId FROM ${table}`, conn);
+        if (lastId.length > 0 && lastId[0]?.lastId) {
+            const { lastId: finalId } = lastId[0];
+            return finalId + 1;
+        } else {
+            return 1;
+        }
+    } catch (e) {
+        console.log(e + ". No se encuentra id")
+    }
+}
+
+const getFullDate = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${date.getMonth() < 9 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`}-${date.getDate()}`
 }
 
 module.exports = {
@@ -128,5 +150,54 @@ module.exports = {
     cerrarSesion: (req, res) => {
         req.session.destroy();
         res.redirect("/");
+    },
+    realizarCompraStripe: async (req, res) => {
+        if (req.session.loggedIn) {
+            try {
+                const { correo } = req.session.dataLogin;
+                const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ["card"],
+                    mode: "payment",
+                    customer_email: correo,
+                    line_items: req.body.map(item => {
+                        return {
+                            price_data: {
+                                currency: "cop",
+                                product_data: {
+                                    name: item.nombre,
+                                    images: ["https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg"]
+                                },
+                                unit_amount: item.valorInicial * 100,
+                            },
+                            quantity: item.cantidad
+                        }
+                    }),
+                    success_url: `http://localhost:4000/success`,
+                    cancel_url: `http://localhost:4000/carrito`
+                })
+                req.session.idCarga = session.id;
+                console.log(session.url);
+                res.json({ url: session.url })
+            } catch (e) {
+                res.status(500).json({error: e.message})
+            }
+        } else {
+            res.status(500).json({error: "Inicie Sesión"})
+        }
+    },
+    realizarCompraFinal: async (req, res) => {
+        try {
+            if (req.session.loggedIn) {
+                const conn = await connection(req);
+                const { idUsuario } = req.session.dataLogin;
+                const idVenta = await getLastId("ventas", conn);
+                const fechaActual = getFullDate();
+                const { idCarga } = req.session;
+            } else {
+                res.send("Debe iniciar sesión");
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 }

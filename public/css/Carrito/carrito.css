@@ -15,7 +15,6 @@
 
 .container-2{
     width: 30%;
-    height: 100%;
     padding: 0;
     margin: 10px;
     text-align: center;
@@ -44,6 +43,11 @@
 }
 .est3{
     width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 40%;
 }
 img{
     width: 100%;
@@ -74,16 +78,14 @@ img{
     border-radius: 12px;
     color: black;
     font-size: 12px;
-    margin-top: 25%;
+    cursor: pointer;
 }
 .btn1:hover{
     width: 120px;
     background-color: #7ff77f;
     border-radius: 12px;
     color: black;
-    font-size: 12px;
-    margin-top: 25%;
-    transition: 4s;
+    transition: ease-in-out 100ms;
 }
 .container-2 h1{
     color: black;
@@ -100,12 +102,37 @@ img{
     border-radius: 12px;
     border: 2px solid black;
 }
-.text-det{
-    color: black;
-    font-weight: bold;
-    font: 10px;
-    text-decoration: underline royalblue 2px;
-    margin-top: 60%;
+
+.te {
+    position: sticky;
+    top: 40%;
+}
+
+span.tex.t1 {
+    font-size: 30px;
+}
+
+span.tex.t2 {
+    font-size: 23px;
+}
+
+.tex.t3 {
+    margin-top: 20px;
+}
+
+.tex.t3 input {
+    font-size: 20px;
+    height: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cantidad-producto {
+    width: 50%;
+    text-align: center;
+    padding-left: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 @media screen and (max-width: 800px) {
@@ -139,6 +166,7 @@ img{
     }
     .est3{
         width: 20%;
+        min-height: 60px;
     }
     img{
         width: 100%;
@@ -171,9 +199,6 @@ img{
         background-color: #7BD5F5;
         border-radius: 12px;
         color: black;
-        font-size: 10px;
-        margin-top: 40%;
-        margin-left: 30%;
     }
     .btn1:hover{
         width: 70px;
@@ -188,7 +213,6 @@ img{
     .container-2 h1{
         color: black;
         font-weight: bold;
-        font-size: 14px;
         text-decoration: underline black 2px;
     }
     .te{
@@ -199,10 +223,6 @@ img{
         gap: 20px;
         padding: 50px 0;
     }
-    .texx{
-        border: solid 2px black;
-        justify-items: flex-end;
-     }
 
     .btn2{
         height: 30px;
@@ -210,8 +230,5 @@ img{
         color: black;
         background-color: #7B7FF6;
         border-radius: 0 0 0 0;
-    }
-    .text-det {
-        margin-top: 0;
     }
 }

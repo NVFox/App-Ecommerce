@@ -1,15 +1,18 @@
 const btnDirect = document.getElementById('btn-direct');
 const btnCarrito = document.getElementById('btn-carrito');
 
-const cantidad = document.getElementById('input-cantidad').value;
-const idArticulo = parseInt(window.location.pathname.replace("producto/", ""));
+const idArticulo = parseInt(window.location.pathname.replace("/producto/", ""));
 
 const obtenerDatosProducto = async () => {
     const data = await fetch(window.location.pathname + "?request=true");
     const results = await data.json();
-    if (results?.length > 0) {
+
+    const cantidad = document.getElementById('input-cantidad').value;
+
+    if (results) {
         results.valorInicial = results.valorTotal
-        results.cantidad = 1;
+        results.cantidad = parseInt(cantidad);
+        results.valorTotal = results.valorInicial * results.cantidad;
     }
     return results;
 }
@@ -30,9 +33,10 @@ btnCarrito.addEventListener('click', async () => {
     if (localStorage.getItem('productos')) {
         const productos = JSON.parse(localStorage.getItem('productos'));
         const indexProducto = productos.findIndex(item => item.idArticulo === idArticulo);
-        if (indexProducto !== -1) {
+        if (indexProducto >= 0) {
+            const cantidad = document.getElementById('input-cantidad').value;
             const productoExistente = productos[indexProducto];
-            productoExistente.cantidad = parseInt(cantidad);
+            productoExistente.cantidad += parseInt(cantidad);
             productoExistente.valorTotal = productoExistente.valorInicial * productoExistente.cantidad;
         } else {
             const producto = await obtenerDatosProducto();
