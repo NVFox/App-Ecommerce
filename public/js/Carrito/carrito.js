@@ -70,7 +70,7 @@ document.addEventListener("input", changeQuantity);
 
 btnCompra.addEventListener("click", async () => {
     const newProductos = JSON.parse(localStorage.getItem("productos"));
-    const peticion = await fetch("/create-checkout-session", {
+    const peticion = await fetch("/create-checkout-session/multiple", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

@@ -12,8 +12,9 @@ router.get("/carrito", controller.renderCarrito);
 router.get("/data/:tabla", controller.renderFormulario);
 router.post("/login/verify", controller.realizarLogin);
 
-router.post("/create-checkout-session", controller.realizarCompraStripe);
-router.get("/success", controller.realizarCompraFinal);
+router.post("/create-checkout-session/:type", controller.realizarCompraStripe);
+router.get("/success/:type", controller.manejarExito);
+router.post("/success", controller.realizarCompraFinal);
 
 router.get("/cerrar", controller.cerrarSesion);
 

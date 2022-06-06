@@ -1,6 +1,7 @@
 const { get } = require("express/lib/request");
 const { connection, query, queryWithParams } = require("../connection/connection");
 const { models, consultas } = require("../models/models");
+const baseModels = require("../models/baseModels");
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
@@ -37,6 +38,13 @@ const getLastId = async (table, conn) => {
 const getFullDate = () => {
     const date = new Date();
     return `${date.getFullYear()}-${date.getMonth() < 9 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`}-${date.getDate()}`
+}
+
+const remapObjectProps = (object, baseObject) => {
+    return Object.keys(baseObject).reduce((obj, key) => {
+        if (object[key]) obj[key] = object[key];
+        return obj;
+    }, {})
 }
 
 module.exports = {
@@ -172,7 +180,7 @@ module.exports = {
                             quantity: item.cantidad
                         }
                     }),
-                    success_url: `http://localhost:4000/success`,
+                    success_url: `http://localhost:4000/success/${req.params.type}`,
                     cancel_url: `http://localhost:4000/carrito`
                 })
                 req.session.idCarga = session.id;
@@ -185,14 +193,46 @@ module.exports = {
             res.status(500).json({error: "Inicie Sesión"})
         }
     },
+    manejarExito: (_req, res) => res.render("success"),
     realizarCompraFinal: async (req, res) => {
         try {
             if (req.session.loggedIn) {
                 const conn = await connection(req);
+
+                const venta = {};
                 const { idUsuario } = req.session.dataLogin;
                 const idVenta = await getLastId("ventas", conn);
                 const fechaActual = getFullDate();
-                const { idCarga } = req.session;
+                const idCarga = req.session.idCarga && req.session.idCarga;
+
+                if (idCarga) {
+                    const { detalleVenta } = baseModels;
+                    const productos = req.body;
+
+                    venta.idVenta = idVenta;
+                    venta.idComprador = idUsuario;
+                    venta.fechaVenta = fechaActual;
+                    venta.valorTotal = productos.reduce((total, item) => total + item.valorTotal, 0);
+
+                    const ventaResults = await queryWithParams("INSERT INTO ventas SET ?", [venta], conn);
+                    let anteriorId = 0;
+
+                    productos.map(async (item) => {
+                        const detalleTotal = remapObjectProps(item, detalleVenta);
+                        const newId = await getLastId("detallesventa", conn);
+
+                        detalleTotal.idVenta = idVenta;
+                        detalleTotal.idDetalle = anteriorId !== 0 ? anteriorId + 1 : newId;
+
+                        anteriorId = detalleTotal.idDetalle;
+
+                        detalleTotal.valorUnitario = item.valorInicial;
+
+                        await queryWithParams("INSERT INTO detallesventa SET ?", [detalleTotal], conn);
+                    })
+
+                    res.json({url: "/data/ventas", results: ventaResults});
+                }
             } else {
                 res.send("Debe iniciar sesión");
             }

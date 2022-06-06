@@ -45,7 +45,22 @@ btnCarrito.addEventListener('click', async () => {
         localStorage.setItem('productos', JSON.stringify(productos));
     } else {
         const producto = await obtenerDatosProducto();
-        console.log(producto);
         localStorage.setItem('productos', JSON.stringify([producto]));
     }
-}) 
+})
+
+btnDirect.addEventListener("click", async() => {
+    const producto = await obtenerDatosProducto();
+    localStorage.setItem('producto', JSON.stringify([producto]));
+
+    const newProductos = JSON.parse(localStorage.getItem("producto"));
+    const peticion = await fetch("/create-checkout-session/unique", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newProductos)
+    })
+    const { url } = await peticion.json();
+    window.location = url;
+})
