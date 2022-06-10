@@ -155,6 +155,9 @@ module.exports = {
     renderCarrito: (req, res) => {
         req.session.loggedIn ? res.render("carrito", {pages: Object.keys(consultas[req.session.dataLogin["rol"]])}) : res.redirect("/login")
     },
+    renderProductos: (req, res) => {
+        req.session.loggedIn ? res.render("productos", {pages: Object.keys(consultas[req.session.dataLogin["rol"]])}) : res.redirect("/login")
+    },
     cerrarSesion: (req, res) => {
         req.session.destroy();
         res.redirect("/");

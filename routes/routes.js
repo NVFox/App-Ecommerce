@@ -7,6 +7,7 @@ router.get("/", controller.renderInicio);
 router.get("/login", controller.renderLogin);
 
 router.get("/producto/:id", controller.obtenerProducto);
+router.get("/productos", controller.renderProductos);
 router.get("/carrito", controller.renderCarrito);
 
 router.get("/data/:tabla", controller.renderFormulario);
