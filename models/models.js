@@ -1,5 +1,6 @@
 const models = {};
 const consultas = {};
+const enlaces = {};
 
 models.usuarios = {
     Administrador: {
@@ -14,7 +15,8 @@ models.usuarios = {
         domicilio: "text",
         correo: "email",
         numeroTelefono: "text",
-        sexo: ["M", "F"]
+        sexo: ["M", "F"],
+        imagen: "file"
     }
 }
 
@@ -23,10 +25,10 @@ models.articulos = {
         idArticulo: "number",
         nombre: "text",
         descripcion: "text",
-        imagen: "file",
         comision: "number",
         valorInicial: "number",
-        valorTotal: "number"
+        valorTotal: "number",
+        imagen: "file"
     }
 }
 
@@ -38,8 +40,6 @@ models.ventas = {
             campo: "idUsuario"
         },
         fechaVenta: "date",
-        ivaVenta: "number",
-        valorInicial: "number",
         valorTotal: "number"
     }
 }
@@ -53,7 +53,7 @@ models.peticiones = {
         },
         asunto: "text",
         descripcion: "text",
-        evidencia: "file"
+        imagen: "file"
     }
 }
 
@@ -77,7 +77,61 @@ consultas.Cliente = {
     peticiones: `SELECT * FROM peticiones WHERE idDetalle IN (SELECT idDetalle FROM detallesventa WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?))`
 }
 
+enlaces.Administrador = {
+    usuarios: {
+        nombre: `Usuarios`,
+        url: `/data/usuarios`
+    },
+    articulos: {
+        nombre: "Productos",
+        url: `/data/articulos`
+    },
+    ventas: {
+        nombre: "Ventas",
+        url: `/data/ventas`
+    }
+}
+
+enlaces.Vendedor = {
+    articulos: {
+        nombre: "Productos",
+        url: `/data/articulos`
+    },
+    detallesventa: {
+        nombre: "Detalles de Venta",
+        url: `/data/detallesventa`
+    },
+    peticiones: {
+        nombre: "Peticiones",
+        url: `/data/peticiones`
+    }
+}
+
+enlaces.Cliente = {
+    articulos: {
+        nombre: "Productos",
+        url: `/productos`
+    },
+    ventas: {
+        nombre: "Compras",
+        url: `/data/ventas`
+    },
+    detallesventa: {
+        nombre: "Detalles de Venta",
+        url: `/data/detallesventa`
+    },
+    calificaciones: {
+        nombre: "Calificaciones",
+        url: `/data/calificaciones`
+    },
+    peticiones: {
+        nombre: "Peticiones",
+        url: `/data/peticiones`
+    }
+}
+
 module.exports = {
     models: models,
-    consultas: consultas
+    consultas: consultas,
+    enlaces: enlaces
 };

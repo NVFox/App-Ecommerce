@@ -23,18 +23,11 @@
             <div class="titulo"><h1>LOS MÁS VENDIDOS</h1></div>
 
         </div>
-        <div class="con">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="" class="i">
-        </div>
-        <div class="con">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="" class="i">
-        </div>
-        <div class="con">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="" class="i">
-        </div>
-        <div class="con">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="" class="i">
-        </div>
+        <% productos.slice(0, 4).map(producto => { %>
+            <div class="con con-card" id="card-<%= producto.idArticulo %>">
+                <img src="/img/<%= producto.imagen %>" alt="" class="i">
+            </div>
+        <% }) %>
     </div>
 </div>
 
@@ -73,130 +66,24 @@
     </div>
 
 <div class="cont   container-2">
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
+    <% productos.map(producto => { %>
+        <div class="bloque" id="producto-<%= producto.idArticulo %>">
+            <div class="img">
+                <img src="/img/<%= producto.imagen %>" alt="">
+            </div>
+            <div class="texto">
+                <span class="n"><%= producto.nombre %></span>
+                <span class="e">Envio gratis</span>
+                <span class="p">Precio: <%= producto.valorTotal %></span>
+                <span class="c">Calificacion</span>
+            </div>
         </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
-    <div class="bloque">
-        <div class="img">
-            <img src="https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg" alt="">
-        </div>
-        <div class="texto">
-            <span class="n">Nombre</span>
-            <span class="e">Envio gratis</span>
-            <span class="p">Precio</span>
-            <span class="c">Calificacion</span>
-        </div>
-    </div>
+    <% }) %>
 </div>
 
 </div>
+
+<script src="/js/Productos/productos.js"></script>
 
 </body>
 </html>

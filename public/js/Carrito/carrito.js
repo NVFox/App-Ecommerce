@@ -11,7 +11,7 @@ totalCompra.textContent = productos ? productos.reduce((a, b) => a + b.valorTota
 const crearProducto = (producto) => {
     template.querySelector('.producto').id = `producto-${producto.idArticulo}`;
 
-    //template.querySelector('.img img').src = producto.imagen;
+    template.querySelector('.img img').src = `/img/${producto.imagen}`;
     template.querySelector('.img img').alt = producto.nombre;
 
     template.querySelector('span .nombre-articulo').textContent = producto.nombre;

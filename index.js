@@ -5,7 +5,6 @@ const app = express();
 const morgan = require("morgan");
 const mysql = require('mysql');
 const myConnection = require('express-myconnection');
-const ejs = require("ejs");
 const session = require("express-session");
 
 app.use(morgan("dev"));
@@ -24,14 +23,14 @@ const dbOptions = {
   
 app.use(myConnection(mysql, dbOptions, 'pool'));
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
 app.use(session({
     secret: "secret",
     saveUninitialized: true,
     resave: false
 }))
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 const rutas = require("./routes/routes");
 app.use("/", rutas);

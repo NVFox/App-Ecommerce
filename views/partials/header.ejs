@@ -11,8 +11,11 @@
         <div class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1" id="menu">
             <nav aria-label="">
                 <ul class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0">
-                    <% pages.map(item => { %>
-                        <li><a class="inline-block no-underline hover:text-black hover:underline py-2 px-4" href="<%= item === "Iniciar Sesión" ? `/login` : `/data/${item}` %>"><%= item === "detallesventa" ? "Venta" : `${item.substring(0, 1).toUpperCase()}${item.substring(1)}` %></a></li>
+                    <% if (!isIndex) { %>
+                        <li><a class="inline-block no-underline hover:text-black hover:underline py-2 px-4" href="/">Inicio</a></li>
+                    <% } %>
+                    <% pages.map(({ nombre, url }) => { %>
+                        <li><a class="inline-block no-underline hover:text-black hover:underline py-2 px-4" href="<%= url %>"><%= nombre %></a></li>
                     <% }) %>
                     <% if (isIndex) { %>
                         <li><a class="inline-block no-underline hover:text-black hover:underline py-2 px-4" href="#acerca">Acerca de Nosotros</a></li>
@@ -47,7 +50,7 @@
                     <circle cx="17.5" cy="18.5" r="1.5" />
                 </svg>
             </a>
-            <% if (!pages.includes("Iniciar Sesión")) { %>
+            <% if (!pages.map(({nombre}) => nombre).includes("Iniciar Sesión")) { %>
                 <a href="/cerrar">Cerrar Sesión</a>
             <% } %>
 

@@ -24,7 +24,9 @@
     width: 90%;
     height: 90%;
     border-radius: 12px;
+    cursor: pointer;
 }
+
 .con:hover .i{
     transform: scale(1.05, 1.05);
     transition: 100ms ease-in-out;

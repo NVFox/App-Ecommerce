@@ -1,22 +1,26 @@
 const { get } = require("express/lib/request");
 const { connection, query, queryWithParams } = require("../connection/connection");
-const { models, consultas } = require("../models/models");
+const { models, consultas, enlaces } = require("../models/models");
 const baseModels = require("../models/baseModels");
+const fs = require("fs");
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
 const replaceObjectValues = async (object, idUsuario, conn) => {
     const modelRol = {...object};
 
-    if (modelRol) Object.keys(modelRol).map( async (key) => {
+    for (const key of Object.keys(modelRol)) {
         if (modelRol[key].tabla) {
             if (modelRol[key].args) {
-                modelRol[key] = await queryWithParams(`SELECT ${modelRol[key].campo} FROM ${modelRol[key].tabla} ${modelRol[key].args}`, [idUsuario], conn)
+                const finalQuery = await queryWithParams(`SELECT ${modelRol[key].campo} FROM ${modelRol[key].tabla} ${modelRol[key].args}`, [idUsuario], conn)
+                modelRol[key] = finalQuery.map(item => item[modelRol[key].campo]);
             } else {
-                modelRol[key] = await query(`SELECT ${modelRol[key].campo} FROM ${modelRol[key].tabla}`, conn)
+                const finalQuery = await query(`SELECT ${modelRol[key].campo} FROM ${modelRol[key].tabla}`, conn);
+                console.log(finalQuery);
+                modelRol[key] = finalQuery.map(item => item[modelRol[key].campo]);
             }
         }
-    })
+    }
 
     return modelRol
 }
@@ -37,7 +41,8 @@ const getLastId = async (table, conn) => {
 
 const getFullDate = () => {
     const date = new Date();
-    return `${date.getFullYear()}-${date.getMonth() < 9 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`}-${date.getDate()}`
+    const month = date.getMonth() + 1;
+    return `${date.getFullYear()}-${date.getMonth() < 9 ? "0" + month : month}-${date.getDate()}`
 }
 
 const remapObjectProps = (object, baseObject) => {
@@ -57,12 +62,12 @@ module.exports = {
                     products: products,
                     loggedIn: true,
                     session: req.session.dataLogin,
-                    pages: ["Inicio", "Productos"]
+                    pages: [{nombre: "Productos", url: "/productos"}],
                 });
             } else {
                 res.render("index", {
                     loggedIn: false,
-                    pages: ["Iniciar Sesión"]
+                    pages: [{nombre: "Iniciar Sesión", url: "/login"}],
                 })
             }
         } catch (err) {
@@ -90,7 +95,7 @@ module.exports = {
             if (results.length > 0) {
                 req.session.dataLogin = results[0];
                 req.session.loggedIn = true;
-                res.redirect(`/data/${Object.keys(consultas[results[0].rol])[0]}`)
+                res.redirect(Object.values(enlaces[results[0].rol])[0]["url"])
             } else {
                 res.json({message: "Datos Incorrectos o Inexistentes"});
             }
@@ -101,6 +106,7 @@ module.exports = {
     renderFormulario: async (req, res) => {
         const { tabla } = req.params;
         const model = models[tabla];
+        let modelRol;
         try {
             if (req.session.loggedIn) {
                 const { rol, idUsuario } = req.session.dataLogin;
@@ -111,13 +117,13 @@ module.exports = {
                     const results = rol === "Administrador" ? await query(consultas[rol][tabla], conn)
                     : await queryWithParams(consultas[rol][tabla], [idUsuario], conn);
 
-                    const modelRol = model ? await replaceObjectValues(model[rol], idUsuario, conn) : undefined;
+                    if (model) modelRol = await replaceObjectValues(model[rol], idUsuario, conn);
 
                     res.render("formulario", {
                         nombreTabla: tabla,
                         data: results,
                         model: modelRol ? modelRol : "no existe",
-                        pages: Object.keys(consultas[rol])
+                        pages: Object.values(enlaces[rol]),
                     })
                 } else {
                     res.send("No está autorizado para consultar este apartado");
@@ -141,7 +147,7 @@ module.exports = {
                 } else {
                     res.render("producto", {
                         data: results[0],
-                        pages: Object.keys(consultas[rol])
+                        pages: Object.values(enlaces[rol]),
                     })
                 }
             } else {
@@ -153,10 +159,102 @@ module.exports = {
         }
     },
     renderCarrito: (req, res) => {
-        req.session.loggedIn ? res.render("carrito", {pages: Object.keys(consultas[req.session.dataLogin["rol"]])}) : res.redirect("/login")
+        req.session.loggedIn ? res.render("carrito", {pages: Object.values(enlaces[req.session.dataLogin["rol"]])}) : res.redirect("/login")
     },
-    renderProductos: (req, res) => {
-        req.session.loggedIn ? res.render("productos", {pages: Object.keys(consultas[req.session.dataLogin["rol"]])}) : res.redirect("/login")
+    renderProductos: async (req, res) => {
+        if (req.session.loggedIn) {
+            try {
+                const conn = await connection(req);
+                const results = await query("SELECT * FROM articulos", conn);
+                res.render("productos", {
+                    productos: results,
+                    pages: Object.values(enlaces[req.session.dataLogin["rol"]])
+                })
+            } catch (e) {
+                console.log(e);
+            }
+        } else {
+            res.redirect("/login")
+        }
+    },
+    insertarRegistro: async (req, res) => {
+        if (req.session.loggedIn) {
+            const { tabla } = req.params;
+            let data = req.body;
+
+            if (req.originalUrl.includes("multipart")) {
+                data = JSON.parse(JSON.stringify(req.body));
+                data[req.file.fieldname] = req.file.filename;
+                console.log(data)
+            }
+            
+            try {
+                const conn = await connection(req);
+                await queryWithParams(`INSERT INTO ${tabla} SET ?`, [data], conn);
+                res.json({
+                    title: "El registro se ha insertado",
+                    message: "Ya se encuentra registrado en el sistema",
+                    type: "success"
+                })
+            } catch (e) {
+                res.json({
+                    title: "Error en inserción de registro",
+                    message: "Intente de Nuevo (Mensaje de error: " + e + ")",
+                    type: "error"
+                })
+            }
+        }
+    },
+    actualizarRegistro: async (req, res) => {
+        if (req.session.loggedIn) {
+            const { tabla } = req.params;
+            const campo = Object.keys(req.query)[0];
+            let data = req.body;
+
+            if (req.originalUrl.includes("multipart")) {
+                data = JSON.parse(JSON.stringify(req.body));
+                data[req.file.fieldname] = req.file.filename;
+                console.log(data)
+            }
+            
+            try {
+                const conn = await connection(req);
+                await queryWithParams(`UPDATE ${tabla} SET ? WHERE ${campo} = ?`, [data, req.query[campo]], conn);
+                res.json({
+                    title: "El registro se ha actualizado",
+                    message: "Ya se encuentra registrado en el sistema",
+                    type: "success"
+                })
+            } catch (e) {
+                res.json({
+                    title: "Error en actualización de registro",
+                    message: "Intente de Nuevo (Mensaje de error: " + e + ")",
+                    type: "error"
+                })
+            }
+        }
+    },
+    eliminarRegistro: async (req, res) => {
+        if (req.session.loggedIn) {
+            const { tabla } = req.params;
+            const campo = Object.keys(req.query)[0];
+
+            try {
+                const conn = await connection(req);
+                await queryWithParams(`DELETE FROM ${tabla} WHERE ${campo} = ?`, [data, req.query[campo]], conn);
+                res.json({
+                    title: "El registro se ha eliminado",
+                    message: "Ya no se encuentra registrado en el sistema",
+                    type: "success"
+                })
+            } catch (e) {
+                res.json({
+                    title: "Error en eliminación de registro",
+                    message: "Intente de Nuevo (Mensaje de error: " + e + ")",
+                    type: "error"
+                })
+            }
+        }
     },
     cerrarSesion: (req, res) => {
         req.session.destroy();
@@ -206,7 +304,7 @@ module.exports = {
                 const { idUsuario } = req.session.dataLogin;
                 const idVenta = await getLastId("ventas", conn);
                 const fechaActual = getFullDate();
-                const idCarga = req.session.idCarga && req.session.idCarga;
+                const idCarga = req.session.idCarga;
 
                 if (idCarga) {
                     const { detalleVenta } = baseModels;

@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../css/Formulario/formulario.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>E-commerce</title>
 </head>
 <body>
@@ -20,7 +21,7 @@
 
                 <div id="conta">
             
-            <form action="<%= `/data/${nombreTabla}` %>"  method="POST" autocomplete="off" class="none">
+            <form action="<%= `/data/${nombreTabla}` %>"  method="POST" autocomplete="off" class="none" id="formDatos">
             
               <div class="container alt-container">
         
@@ -28,21 +29,21 @@
         
                     <% Object.keys(model).map(key => { %>
                         <% if (Array.isArray(model[key])) { %>
-                            <select name="<%= key %>" id="select-<%= key %>">
-                                <% model[key].map(item => { %>          
+                            <select class="form-input field" name="<%= key %>" id="select-<%= key %>">
+                                <option selected disabled value="">Seleccione <%= key %></option>
+                                <% model[key].map(item => { %>
                                     <option value="<%= item %>"><%= item %></option>
                                 <% }) %>
                             </select>
                         <% } else { %>
-                            <input class="form-input" id="input-<%= key %>" name="<%= key %>" type="<%= model[key] %>" placeholder="<%= `${key.substring(0, 1).toUpperCase()}${key.substring(1)}` %>">
+                            <input class="form-input field" id="input-<%= key %>" name="<%= key %>" type="<%= model[key] %>" placeholder="<%= `${key.substring(0, 1).toUpperCase()}${key.substring(1)}` %>">
                         <% } %>
                     <% }) %>
                         
-                    <input  type="submit"  value="INGRESAR"   name="btning" class="btning boton" ></input>
-                    <input  type="submit"  value="ELIMINAR"   name="btneli" class="btneli boton" ></input>
-                    <input  type="submit"  value="ACTUALIZAR" name="btnact" class="btnact boton" ></input>
-            
-                    <input class="form__button button submit boton"  type="submit" value="CONSULTAR">
+                    <button type="button" class="btning boton sub-btn">INGRESAR</button>
+                    <button type="button" class="btneli boton sub-btn">ELIMINAR</button>
+                    <button type="button" class="btnact boton sub-btn">ACTUALIZAR</button>
+                    <button type="button" class="btncon boton sub-btn form__button button submit">CONSULTAR</button>
         
                     </div>
             
@@ -50,6 +51,8 @@
         
             </form>
             </div>
+
+            
         <% } %>
 
         <table>
@@ -71,6 +74,8 @@
             </tbody>
         </table>
     </section>
-
+    <% if (Object.keys(model).length && !(model == "no existe")) { %>
+        <script src="/js/CRUD/crudUtilities.js"></script>
+    <% } %>
 </body>
 </html>
