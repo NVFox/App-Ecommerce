@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/css/PaginaPrincipal/style.css">
+
 <nav id="header" class="w-full z-30 top-0 py-1" aria-label="">
     <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
 
@@ -8,7 +10,7 @@
         </label>
         <input class="hidden" type="checkbox" id="menu-toggle" />
 
-        <div class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1" id="menu">
+        <div class="hidden md:flex md:items-center md:w-auto w-full order-<%= pages.length %> md:order-1" id="menu">
             <nav aria-label="">
                 <ul class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0">
                     <% if (!isIndex) { %>
