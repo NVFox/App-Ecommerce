@@ -14,11 +14,11 @@ app.use(express.static("public"));
 
 const PORT = process.env.PORT || 4000; 
 const dbOptions = {
-    host: 'localhost',
-    user: 'root',
-    password: '',
+    host: 'mysql-bdproyectos.alwaysdata.net',
+    user: '272842_adt',
+    password: 'sql2415david',
     port: 3306,
-    database: 'ecommerce'
+    database: 'bdproyectos_ecommerce'
 };
   
 app.use(myConnection(mysql, dbOptions, 'pool'));
