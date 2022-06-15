@@ -12,7 +12,7 @@ app.use(morgan("dev"));
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
-const PORT = 4000; 
+const PORT = process.env.PORT || 4000; 
 const dbOptions = {
     host: 'localhost',
     user: 'root',
