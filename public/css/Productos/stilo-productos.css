@@ -49,13 +49,13 @@
     width: 90%;
 }
 .cont{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    display: flex;
     gap: 30px 1em ;
+    flex-wrap: wrap;
     margin-left: 3%;
 }
 .bloque{
-    width: 90%;
+    width: 30%;
     padding: 15px;
     border-radius: 5px;
     cursor: pointer;
