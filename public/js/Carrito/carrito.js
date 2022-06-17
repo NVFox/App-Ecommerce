@@ -6,6 +6,17 @@ const productos = JSON.parse(localStorage.getItem("productos"));
 
 const btnCompra = document.getElementById("btn-compra");
 
+document.addEventListener("DOMContentLoaded", async() => {
+    if (!productos) {
+        await Swal.fire(
+            "No hay productos en el carrito", 
+            "Empieza a buscar nuevas obras!", 
+            "info"
+        )
+        history.back()
+    }
+})
+
 totalCompra.textContent = productos ? productos.reduce((a, b) => a + b.valorTotal, 0) + " COP" : "0 COP";
 
 const crearProducto = (producto) => {

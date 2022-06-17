@@ -1,4 +1,4 @@
-.recomendado, .con{
+.recomendado{
     background-color: rgba(187, 187, 187, 0.481);
     height: 340px; 
     border-radius: 10px;
@@ -7,6 +7,15 @@
     align-items: center;
     margin-top: 30px;
 }
+
+.con{
+    background-color: rgba(187, 187, 187, 0.481);
+    height: 90%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .row{
     width: 95%;
     height: 90%;
@@ -20,7 +29,7 @@
     font-size: 16px;
     color: black;
 }
-.con, .i{
+.con-card, .i{
     width: 90%;
     height: 90%;
     border-radius: 12px;
@@ -32,6 +41,32 @@
     transition: 100ms ease-in-out;
 }
 
+.contenido-card {
+    opacity: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: white;
+    padding-left: 10px;
+    border-radius: 12px;
+}
+
+.contenido-card:hover {
+    opacity: 1;
+    transition: 100ms ease-in-out;
+}
+
+.titulo-card {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.desc-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
 
 /*--------------------------------------------------------------
@@ -56,9 +91,21 @@
 }
 .bloque{
     width: 30%;
+    height: fit-content;
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 25px 25px 0 0;
     cursor: pointer;
+}
+
+.bloque .img {
+    height: 300px;
+}
+
+.bloque .img img{
+    height: 95%;
+    width: 100%;
+    border-radius: 12% 12% 0 0;
+    object-fit: contain;
 }
 
 .bloque:hover{
@@ -69,29 +116,50 @@
 
 .texto{
     display: flex;
-    flex-direction: column;
     font-size: 13px;
+    margin: 5px 0;
 }
+
+.contenido {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.like {
+    margin: auto;
+}
+
+.titulo {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.nav-menu ul {
+    margin-left: 15px;
+    font-size: 20px;
+}
+
+button.btn-filtro {
+    margin-top: 30px;
+    padding: 5px;
+    background: #212431;
+    border-radius: 5px 0 5px 0;
+    font-weight: bold;
+    color: #FFFF;
+}
+
 .n{
     color: black;
     font-size: 15px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    text-decoration: underline black 1px;
 }
-.e{
-    background-color: rgba(218, 63, 63, 0.704);
-    color: black;
-    width: 50%;
-    border-radius: 12px;
-    font-size: 12px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    text-align: center;
-}
+
 .p{
-    color: red;
     font-size: 15px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    text-decoration: underline black 1px;
 }
 .c{
     color: yellow;
@@ -141,10 +209,16 @@
     font-family: "Poppins", sans-serif;
 }
 
-.header .profile h1 a,
-.header .profile h1 a:hover {
+.header .profile h1 a {
     color: rgb(0, 0, 0);
+    font-size: 30px;
     text-decoration: none;
+}
+
+.header ul li {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
 .header .profile .social-links a {
@@ -160,12 +234,7 @@
     width: 36px;
     height: 36px;
     transition: 0.3s;
-}
-
-.header .profile .social-links a:hover {
-    background: #149ddd;
-    color: rgb(0, 0, 0);
-    text-decoration: none;
+    cursor: initial;
 }
 
 /* #main {
@@ -226,40 +295,44 @@
 }
 
 @media screen and (max-width: 800px) {
-    .recomendado, .con{
-        background-color: rgba(255, 255, 255, 0);
-        height: 100px; 
-        border-radius: 10px;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin-top: 3%;
-    }
     .row{
-        width: 50%;
-        height: 50%;
+        width: 90%;
+        height: 90%;
         border-radius: 12px;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         gap: 30px 1em ;
         align-items: center;
     }
     .titulo{
         font-size: 16px;
-        color: rgba(96, 96, 96, 0);
     }
-    .container{
-        background-color: rgba(161, 161, 161, 0.367);
+    .container-1{
+        width: 0%;
+    }
+    .container-2{
+        width: 100%;
+    }
+    .con-card p,
+    .con-card h4 {
+        font-size: 13px;
+    }
+
+    .con-card h3 {
+        font-size: 16px;
+    }
+    .cont{
+        background-color: rgba(255, 255, 255, 0.367);
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 30px 1em ;
         margin-top: 3%;
-        margin-left: 6%;
+        /* margin-left: 6%; */
     }
     .bloque{
-        width: 80%;
+        width: 90%;
         height: 100%;
-        border: solid 1px black;
+        /* border: solid 1px black; */
         background-color: rgb(255, 255, 255);
     }
     .bloque:hover{
@@ -283,14 +356,10 @@
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         text-align: center;
     }
-    .p{
-        color: red;
-        font-size: 14px;
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        text-decoration: underline black 1px;
+
+    .header {
+    background: #000000;
+    left: -400px;
     }
-    .c{
-        color: yellow;
-        font-size: 13px;
-    }
+
 }

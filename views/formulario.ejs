@@ -10,10 +10,10 @@
 
     <link rel="stylesheet" href="../css/Formulario/formulario.css">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>E-commerce</title>
+    <title>Gestión de <%= nombreTabla %> - Ecultural</title>
 </head>
 <body>
-    <%- include('./partials/header', {pages: pages, isIndex: false}) %>
+    <%- include('./partials/header', {pages: pages, isIndex: false, session: session}) %>
     
     <section class="real-section">
         <% if (Object.keys(model).length && !(model == "no existe")) { %>
@@ -39,11 +39,13 @@
                             <input class="form-input field" id="input-<%= key %>" name="<%= key %>" type="<%= model[key] %>" placeholder="<%= `${key.substring(0, 1).toUpperCase()}${key.substring(1)}` %>">
                         <% } %>
                     <% }) %>
-                        
-                    <button type="button" class="btning boton sub-btn">INGRESAR</button>
-                    <button type="button" class="btneli boton sub-btn">ELIMINAR</button>
-                    <button type="button" class="btnact boton sub-btn">ACTUALIZAR</button>
-                    <button type="button" class="btncon boton sub-btn form__button button submit">CONSULTAR</button>
+
+                    <% if (!["Administrador"].includes(session.rol)) { %>
+                        <button type="button" class="btning boton sub-btn" id="btn-ingresar">INGRESAR</button>
+                        <button type="button" class="btneli boton sub-btn" id="btn-eliminar">ELIMINAR</button>
+                    <% } %>
+                    <button type="button" class="btnact boton sub-btn" id="btn-actualizar">ACTUALIZAR</button>
+                    <button type="button" class="btncon boton sub-btn form__button button submit" id="btn-consultar">CONSULTAR</button>
         
                     </div>
             
@@ -54,28 +56,51 @@
 
             
         <% } %>
-
-        <table>
-            <thead>
-                <tr>
-                <% Object.keys(data[0]).map(item => { %>
-                    <th><%= `${item.substring(0, 1).toUpperCase()}${item.substring(1)}` %></th>
-                <% }) %>
-                </tr>
-            </thead>
-            <tbody>
-                <% data.map(item => { %>
+        <% if (data[0]) { %>
+            <table class="table-auto" style="width: 95%;">
+                <thead>
                     <tr>
-                        <% Object.values(item).map(value => { %>
-                            <td><%= value %></td>
-                        <% }) %>
+                    <% Object.keys(data[0]).map(item => { %>
+                        <th><%= `${item.substring(0, 1).toUpperCase()}${item.substring(1)}` %></th>
+                    <% }) %>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <% data.map(item => { %>
+                        <tr>
+                            <% Object.keys(item).map(key => { %>
+                                <% if (key === "imagen") { %>
+                                    <td>
+                                        <a href="/img/<%= item.imagen %>" style="display: flex; justify-content: center;">
+                                            <img src="/img/<%= item.imagen %>" style="width: 100px;" alt="">
+                                        </a>
+                                    </td>
+                                <% } else if (key === "estado" && session.rol === "Administrador") { %>
+                                    <td style="text-align: center;">
+                                        <% if (item[key] === "Aceptada") { %>
+                                            <%= item[key] %>
+                                        <% } else { %>
+                                            <select name="estado" id="estado-peticion-<%= item.idPeticion %>" class="estado-peticion" style="display: flex; margin: auto;">
+                                                <option value="<%= item[key] %>" selected><%= item[key] %></option>
+                                                <% ["Pendiente", "Rechazada", "Aceptada"].filter(opt => opt !== item[key]).map(opt => { %>
+                                                    <option value="<%= opt %>"><%= opt %></option>
+                                                <% }) %>
+                                            </select>
+                                        <% } %>
+                                    </td>
+                                <% } else { %>
+                                    <td style="text-align: center;"><%= item[key] %></td>
+                                <% } %>
+                            <% }) %>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
     </section>
     <% if (Object.keys(model).length && !(model == "no existe")) { %>
         <script src="/js/CRUD/crudUtilities.js"></script>
     <% } %>
+    <script src="/js/CRUD/formularioPeticiones.js"></script>
 </body>
 </html>

@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="/css/Productos/stilo-productos.css">
-    <title>Productos</title>
+    <link rel="stylesheet" href="/css/Generales/calificaciones.css">
+    <title>Productos - Ecultural</title>
 </head>
 <body>
 
-    <%- include('./partials/header', {pages: pages, isIndex: false}) %>
+    <%- include('./partials/header', {pages: pages, isIndex: false, session: session}) %>
 
 <div class="recomendado">
     <div class="row">
@@ -23,9 +24,23 @@
             <div class="titulo"><h1>LOS MÁS VENDIDOS</h1></div>
 
         </div>
-        <% productos.slice(0, 4).map(producto => { %>
+        <% [...masVendidos, ...productos.slice(masVendidos.length)].slice(0, 4).map(producto => { %>
             <div class="con con-card" id="card-<%= producto.idArticulo %>">
-                <img src="/img/<%= producto.imagen %>" alt="" class="i">
+                <div class="i" style="background: url('/img/<%= producto.imagen %>'); background-size: cover;">
+                    <div class="contenido-card" style="background-color: rgba(0, 0, 0, 0.7);">
+                        <div class="titulo-card">
+                            <h3><%= producto.nombre %></h3>
+                        </div>
+                        <div class="desc-card">
+                            <div class="precio-card">
+                                <h4>Precio: <%= producto.valorTotal %></h4>
+                            </div>
+                            <p class="descripcion-card">
+                                <%= producto.descripcion.substring(0, 50) + "..." %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         <% }) %>
     </div>
@@ -37,8 +52,8 @@
             <div class="d-flex flex-column">
     
                 <div class="profile">
-                    <img alt="" class="img-fluid rounded-circle" src="assets/img/profile-img.jpg">
-                    <h1 class="text-light"><a href="index.html">Categoria</a></h1>
+                    <img alt="" class="img-fluid rounded-circle">
+                    <h1 class="text-light"><a href="index.html">Filtros</a></h1>
                     <div class="social-links mt-3 text-center">
                         <a class="github" href="https://github.com/antonioalfa22"><i class="bx bxl-github"></i></a>
                         <a class="facebook" href="#"><i class="bx bxl-facebook"></i></a>
@@ -49,13 +64,20 @@
     
                 <nav class="nav-menu">
                     <ul>
-                        <li class="active"><a href="index.html"><i class="bx bx-home"></i> <span>Manillas</span></a></li>
-                        <li><a href="#"><i class="bx bx-user"></i> <span>Cuadros</span></a></li>
-                        <li><a href="#"><i class="bx bx-file-blank"></i> <span>Seramica</span></a></li>
-                        <li><a href="#"><i class="bx bx-book-content"></i><span>Pinturas</span></a></li>
-                        <li><a href="#"><i class="bx bx-server"></i><span>Deporte</span></a></li>
-                        <li><a href="#"><i class="bx bx-envelope"></i><span>Artesanias</span></a></li>
-    
+                        <% Object.keys(productos[0]).filter(item => !["idArticulo", "idVendedor", "imagen", "comision", "valorInicial"].includes(item)).map(key => { %>
+                            <li>
+                                <label for="<%= key === "valorTotal" ? 'min-valorTotal' : 'filtro-' + key %>"></label> <%= `${key.substring(0, 1).toUpperCase()}${key.slice(1)}` %>
+                                <% if (key === "valorTotal") { %>
+                                    <input type="number" name="min-valorTotal" id="min-valorTotal" class="filtro" placeholder="mínimo" style="margin-bottom: 5px; padding-left: 10px;">
+                                    <input type="number" name="max-valorTotal" id="max-valorTotal" class="filtro" placeholder="máximo" style="margin-top: 5px; padding-left: 10px;">
+                                <% } else { %>
+                                    <input type="<%= typeof productos[0][key] === 'number' ? 'number' : 'text' %>" name="<%= key %>" id="filtro-<%= key %>" class="filtro">
+                                <% } %>
+                            </li>
+                        <% }) %>
+                        <li>
+                            <button class="btn-filtro">Filtrar</button>
+                        </li>
                     </ul>
                 </nav>
                 <!-- .nav-menu -->
@@ -72,10 +94,24 @@
                 <img src="/img/<%= producto.imagen %>" alt="">
             </div>
             <div class="texto">
-                <span class="n"><%= producto.nombre %></span>
-                <span class="e">Envio gratis</span>
-                <span class="p">Precio: <%= producto.valorTotal %></span>
-                <span class="c">Calificacion</span>
+                <div class="contenido">
+                    <div class="n"><%= producto.nombre %></div>
+                    <div class="p">Precio: <%= producto.valorTotal %></div>
+                    <div class="p">Vendedor: <%= producto.nombreVendedor %></div>
+                </div>
+                <% if (compras.includes(producto.idArticulo)) { %>
+                    <div class="like">
+                        <% if (calificaciones.includes(producto.idArticulo)) { %>
+                            <svg class="h-6 w-6 fill-current like-icon buyed calificado" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12,4.595c-1.104-1.006-2.512-1.558-3.996-1.558c-1.578,0-3.072,0.623-4.213,1.758c-2.353,2.363-2.352,6.059,0.002,8.412 l7.332,7.332c0.17,0.299,0.498,0.492,0.875,0.492c0.322,0,0.609-0.163,0.792-0.409l7.415-7.415 c2.354-2.354,2.354-6.049-0.002-8.416c-1.137-1.131-2.631-1.754-4.209-1.754C14.513,3.037,13.104,3.589,12,4.595z M18.791,6.205 c1.563,1.571,1.564,4.025,0.002,5.588L12,18.586l-6.793-6.793C3.645,10.23,3.646,7.776,5.205,6.209 c0.76-0.756,1.754-1.172,2.799-1.172s2.035,0.416,2.789,1.17l0.5,0.5c0.391,0.391,1.023,0.391,1.414,0l0.5-0.5 C14.719,4.698,17.281,4.702,18.791,6.205z" />
+                            </svg>
+                        <% } else { %>
+                            <svg class="h-6 w-6 fill-current text-gray-500 hover:text-black like-icon buyed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12,4.595c-1.104-1.006-2.512-1.558-3.996-1.558c-1.578,0-3.072,0.623-4.213,1.758c-2.353,2.363-2.352,6.059,0.002,8.412 l7.332,7.332c0.17,0.299,0.498,0.492,0.875,0.492c0.322,0,0.609-0.163,0.792-0.409l7.415-7.415 c2.354-2.354,2.354-6.049-0.002-8.416c-1.137-1.131-2.631-1.754-4.209-1.754C14.513,3.037,13.104,3.589,12,4.595z M18.791,6.205 c1.563,1.571,1.564,4.025,0.002,5.588L12,18.586l-6.793-6.793C3.645,10.23,3.646,7.776,5.205,6.209 c0.76-0.756,1.754-1.172,2.799-1.172s2.035,0.416,2.789,1.17l0.5,0.5c0.391,0.391,1.023,0.391,1.414,0l0.5-0.5 C14.719,4.698,17.281,4.702,18.791,6.205z" />
+                            </svg>
+                        <% } %>
+                    </div>
+                <% } %>
             </div>
         </div>
     <% }) %>

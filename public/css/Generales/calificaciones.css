@@ -1,0 +1,21 @@
+.like-icon.notBuyed{
+    color: black;
+}
+
+.like-icon.buyed{
+    color: rgba(107,114,128,0.7);
+}
+
+.like-icon.calificado{
+    color: #FF0080;
+}
+
+.like-icon.buyed:hover {
+    transition: 100ms ease-in-out;
+    color: #FF0080;
+}
+
+.like-icon.calificado:hover {
+    transition: 100ms ease-in-out;
+    color: rgb(107,114,128);
+}

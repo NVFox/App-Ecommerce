@@ -11,7 +11,6 @@ models.usuarios = {
             tabla: "roles",
             campo: "nombreRol"
         },
-        edad: "number",
         domicilio: "text",
         correo: "email",
         numeroTelefono: "text",
@@ -25,9 +24,7 @@ models.articulos = {
         idArticulo: "number",
         nombre: "text",
         descripcion: "text",
-        comision: "number",
         valorInicial: "number",
-        valorTotal: "number",
         imagen: "file"
     }
 }
@@ -46,10 +43,10 @@ models.ventas = {
 
 models.peticiones = {
     Cliente: {
-        idDetalle: {
-            tabla: "detallesventa",
-            campo: "idDetalle",
-            args: "WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?)"
+        idPeticion: "number",
+        idVenta: {
+            tabla: "ventas",
+            campo: "idVenta"
         },
         asunto: "text",
         descripcion: "text",
@@ -60,21 +57,19 @@ models.peticiones = {
 consultas.Administrador = {
     usuarios: `SELECT * FROM usuarios`,
     articulos: `SELECT * FROM articulos`,
-    ventas: `SELECT * FROM ventas`
+    ventas: `SELECT * FROM ventas`,
+    peticiones: `SELECT * FROM peticiones`
 }
 
 consultas.Vendedor = {
     articulos: `SELECT * FROM articulos WHERE idVendedor = ?`,
     detallesventa: `SELECT * FROM detallesventa WHERE idArticulo IN (SELECT idArticulo FROM articulos WHERE idVendedor = ?)`,
-    peticiones: `SELECT * FROM peticiones WHERE idDetalle IN (SELECT idDetalle FROM detallesventa WHERE idArticulo IN (SELECT idArticulo FROM articulos WHERE idVendedor = ?))`
+    peticiones: `SELECT * FROM peticiones WHERE idVenta IN (SELECT idVenta FROM detallesventa WHERE idArticulo IN (SELECT idArticulo FROM articulos WHERE idVendedor = ?))`
 }
 
 consultas.Cliente = {
-    articulos: `SELECT * FROM articulos`,
-    ventas: `SELECT * FROM ventas WHERE idComprador = ?`,
-    detallesventa: `SELECT * FROM detallesventa WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?)`,
     calificaciones: `SELECT * FROM calificaciones WHERE idDetalle IN (SELECT idDetalle FROM detallesventa WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?))`,
-    peticiones: `SELECT * FROM peticiones WHERE idDetalle IN (SELECT idDetalle FROM detallesventa WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?))`
+    peticiones: `SELECT * FROM peticiones WHERE idVenta IN (SELECT idVenta FROM ventas WHERE idComprador = ?)`
 }
 
 enlaces.Administrador = {
@@ -89,6 +84,10 @@ enlaces.Administrador = {
     ventas: {
         nombre: "Ventas",
         url: `/data/ventas`
+    },
+    peticiones: {
+        nombre: "Peticiones",
+        url: `/data/peticiones`
     }
 }
 
@@ -114,15 +113,7 @@ enlaces.Cliente = {
     },
     ventas: {
         nombre: "Compras",
-        url: `/data/ventas`
-    },
-    detallesventa: {
-        nombre: "Detalles de Venta",
-        url: `/data/detallesventa`
-    },
-    calificaciones: {
-        nombre: "Calificaciones",
-        url: `/data/calificaciones`
+        url: `/compras`
     },
     peticiones: {
         nombre: "Peticiones",
