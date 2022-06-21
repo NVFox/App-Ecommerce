@@ -34,7 +34,7 @@ document.addEventListener("click", async e => {
         cardsProducto.map(item => item.style.display = "initial")
 
         newProductos = [...productos.results]
-        const filtros = [].slice.call(document.querySelectorAll(".filtro")).filter(item => item.value.length > 0);
+        const filtros = [].slice.call(document.querySelectorAll(".filtro")).filter(item => (item.value.length > 0 && item.type !== "radio") || (item?.checked && item.type === "radio") || (item.type === "range" && item.value != "0"));
 
         filtros.map(item => {
             if (!item.name.includes("valorTotal")) {

@@ -2,6 +2,7 @@ const { replaceObjectValues, getLastId, getFullDate, remapObjectProps } = requir
 const { connection, query, queryWithParams } = require("../connection/connection");
 const { models, consultas, enlaces } = require("../models/models");
 const { baseModels, defaultValuesModels } = require("../models/baseModels");
+const filters = require("../models/filters");
 const fs = require("fs");
 const path = require("path");
 
@@ -22,7 +23,7 @@ module.exports = {
                     calificaciones: calificacionesPositivas.map(item => item.idArticulo),
                     loggedIn: true,
                     session: { idUsuario, nombreUsuario, imagen, rol },
-                    pages: [{nombre: "Productos", url: "/productos"}],
+                    pages: Object.values(enlaces[rol]),
                 });
             } else {
                 res.render("index", {
@@ -80,7 +81,7 @@ module.exports = {
     registroUsuario: async (req, res) => {
         let data = JSON.parse(JSON.stringify(req.body));
 
-        data[req.file.fieldname] = req.file.filename;
+        if (req.file?.filename) data[req.file.fieldname] = req.file.filename;
         console.log(data)
         
         try {
@@ -219,11 +220,19 @@ module.exports = {
                 const productosComprados = await queryWithParams("SELECT d.idArticulo FROM detallesventa d INNER JOIN ventas v ON d.idVenta = v.idVenta WHERE idComprador = ?", [idUsuario], conn);
                 const calificacionesPositivas = await queryWithParams("SELECT d.idArticulo FROM calificaciones c INNER JOIN detallesventa d ON c.idDetalle = d.idDetalle INNER JOIN ventas v ON d.idVenta = v.idVenta WHERE idComprador = ? AND recomendado = 1", [idUsuario], conn);
                 const productosMasVendidos = await query("SELECT a.* FROM articulos a INNER JOIN (SELECT dt.idArticulo, COUNT(dt.idArticulo) AS cuenta FROM detallesventa dt GROUP BY(idArticulo) ORDER BY COUNT(idArticulo) DESC) AS d ON a.idArticulo = d.idArticulo ORDER BY d.cuenta DESC", conn)
+
+                Object.keys(filters).map(key => {
+                    if (results.length > 0) {
+                        if (results[0][key]) filters[key].values = [...new Set(results.map(item => item[key]))]
+                    }
+                })
+
                 res.render("productos", {
                     masVendidos: productosMasVendidos,
                     compras: productosComprados.map(item => item.idArticulo),
                     calificaciones: calificacionesPositivas.map(item => item.idArticulo),
                     productos: results,
+                    filtros: filters,
                     session: { idUsuario, nombreUsuario, imagen, rol },
                     pages: Object.values(enlaces[req.session.dataLogin["rol"]])
                 })
@@ -245,6 +254,7 @@ module.exports = {
 
                 if (tabla === "articulos") {
                     data = {...data, ...defaultValuesModels[tabla](data.valorInicial)}
+                    data.idVendedor = req.session.dataLogin["idUsuario"]
                 } else {
                     data = {...data, ...defaultValuesModels[tabla]()}
                 }
@@ -289,7 +299,7 @@ module.exports = {
                 const conn = await connection(req);
 
                 const anteriorRegistro = await queryWithParams(`SELECT * FROM ${tabla} WHERE ${campo} = ?`, [req.query[campo]], conn);
-                if (data.imagen) fs.unlinkSync(path.join(__dirname, `../public/img/${anteriorRegistro[0].imagen}`)) 
+                if (data.imagen && anteriorRegistro[0].imagen?.match(/\.[\w]+$/g)) fs.unlinkSync(path.join(__dirname, `../public/img/${anteriorRegistro[0].imagen}`)) 
 
                 await queryWithParams(`UPDATE ${tabla} SET ? WHERE ${campo} = ?`, [data, req.query[campo]], conn);
                 res.json({
@@ -315,7 +325,7 @@ module.exports = {
                 const conn = await connection(req);
 
                 const anteriorRegistro = await queryWithParams(`SELECT * FROM ${tabla} WHERE ${campo} = ?`, [req.query[campo]], conn);
-                if (anteriorRegistro[0]?.imagen) fs.unlinkSync(path.join(__dirname, `../public/img/${anteriorRegistro[0].imagen}`))
+                if (anteriorRegistro[0].imagen?.match(/\.[\w]+$/g)) fs.unlinkSync(path.join(__dirname, `../public/img/${anteriorRegistro[0].imagen}`))
 
                 await queryWithParams(`DELETE FROM ${tabla} WHERE ${campo} = ?`, [req.query[campo]], conn);
                 res.json({
@@ -409,15 +419,15 @@ module.exports = {
                                 currency: "cop",
                                 product_data: {
                                     name: item.nombre,
-                                    images: ["https://www.sanborns.com.mx/imagenes-sanborns-ii/1200/2001595980720.jpg"]
+                                    images: [item.imagen]
                                 },
                                 unit_amount: item.valorInicial * 100,
                             },
                             quantity: item.cantidad
                         }
                     }),
-                    success_url: `http://localhost:4000/success/${req.params.type}`,
-                    cancel_url: `http://localhost:4000/carrito`
+                    success_url: `${process.env.DOMAIN}/success/${req.params.type}`,
+                    cancel_url: `${process.env.DOMAIN}/carrito`
                 })
                 req.session.idCarga = session.payment_intent;
                 console.log(session.url);

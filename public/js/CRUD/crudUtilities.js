@@ -57,7 +57,7 @@ const actualizarRegistro = async () => {
         const { title, message, type } = results;
         await Swal.fire(title, message, type)
     
-        if (btnActualizar.classList.contains("buton")) {
+        if (btnActualizar.classList.contains("buton") && type !== "error") {
             location.href = "/cerrar"
         } else {
             location.reload()
@@ -71,7 +71,7 @@ const eliminarRegistro = async () => {
     if (campoPrincipal.value.length > 0) {
         let query = "";
 
-        if (btnEliminar.classList.contains("buton")) {
+        if (!btnEliminar.classList.contains("buton")) {
             query = `/registro/${nombreTabla}?${campoPrincipal.name}=${campoPrincipal.value}`
         } else {
             query = `/registro/usuarios?idUsuario=${location.pathname.replace("/perfil/", "")}`
@@ -85,7 +85,7 @@ const eliminarRegistro = async () => {
         const { title, message, type } = results;
         await Swal.fire(title, message, type)
     
-        if (!btnEliminar.classList.contains("buton")) {
+        if (btnEliminar.classList.contains("buton") && type !== "error") {
             location.href = "/cerrar"
         } else {
             location.reload()

@@ -23,6 +23,7 @@ models.articulos = {
     Vendedor: {
         idArticulo: "number",
         nombre: "text",
+        categoria: "text",
         descripcion: "text",
         valorInicial: "number",
         imagen: "file"
@@ -33,7 +34,7 @@ models.ventas = {
     Administrador: {
         idVenta: "number",
         idComprador: {
-            tabla: "usuarios",
+            tabla: "usuarios u INNER JOIN ventas v ON u.idUsuario = v.idComprador",
             campo: "idUsuario"
         },
         fechaVenta: "date",

@@ -183,9 +183,8 @@ button.btn-filtro {
     width: 300px;
     z-index: 9999;
     transition: all 0.5s;
-    padding: 0 15px;
+    padding: 0 15px 0 0;
     background: #c6dbf5;
-    overflow-y: auto;
 }
 
 .header {

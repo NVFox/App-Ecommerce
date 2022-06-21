@@ -24,7 +24,7 @@
             <div class="titulo"><h1>LOS MÁS VENDIDOS</h1></div>
 
         </div>
-        <% [...masVendidos, ...productos.slice(masVendidos.length)].slice(0, 4).map(producto => { %>
+        <% [...masVendidos, ...productos.filter((producto, i) => !masVendidos.map(item => item?.idArticulo).includes(producto.idArticulo))].slice(0, 4).map(producto => { %>
             <div class="con con-card" id="card-<%= producto.idArticulo %>">
                 <div class="i" style="background: url('/img/<%= producto.imagen %>'); background-size: cover;">
                     <div class="contenido-card" style="background-color: rgba(0, 0, 0, 0.7);">
@@ -49,7 +49,7 @@
 <div class="section">
     <div class="cont container-1">
         <header class="header">
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column" style="position: sticky; top: 10%;">
     
                 <div class="profile">
                     <img alt="" class="img-fluid rounded-circle">
@@ -64,17 +64,38 @@
     
                 <nav class="nav-menu">
                     <ul>
-                        <% Object.keys(productos[0]).filter(item => !["idArticulo", "idVendedor", "imagen", "comision", "valorInicial"].includes(item)).map(key => { %>
+                        <% Object.keys(filtros).map(key => { %>
                             <li>
-                                <label for="<%= key === "valorTotal" ? 'min-valorTotal' : 'filtro-' + key %>"></label> <%= `${key.substring(0, 1).toUpperCase()}${key.slice(1)}` %>
-                                <% if (key === "valorTotal") { %>
-                                    <input type="number" name="min-valorTotal" id="min-valorTotal" class="filtro" placeholder="mínimo" style="margin-bottom: 5px; padding-left: 10px;">
-                                    <input type="number" name="max-valorTotal" id="max-valorTotal" class="filtro" placeholder="máximo" style="margin-top: 5px; padding-left: 10px;">
-                                <% } else { %>
-                                    <input type="<%= typeof productos[0][key] === 'number' ? 'number' : 'text' %>" name="<%= key %>" id="filtro-<%= key %>" class="filtro">
-                                <% } %>
+                                <fieldset>
+                                    <legend><%= filtros[key].label %></legend>
+                                    <div class="opciones" style="display: flex; flex-direction: column; margin: 10px 0;">
+                                        <div class="opcion" style="display: flex; flex-direction: row-reverse; justify-content:flex-end; align-items: center; margin-left: 20px;">
+                                            <label for="filtro-na" style="margin-left: 7px;">N/A</label>
+                                            <input type="radio" name="<%= key %>" id="filtro-na" class="filtro input-radio" value="" checked>
+                                        </div>
+                                        <% filtros[key].values.map(opt => { %>
+                                            <div class="opcion" style="display: flex; flex-direction: row-reverse; justify-content:flex-end; align-items: center; margin-left: 20px;">
+                                                <label for="<%= 'filtro-' + opt %>" style="margin-left: 7px;"><%= opt %></label>
+                                                <input type="radio" name="<%= key %>" id="filtro-<%= opt %>" class="filtro input-radio" value="<%= opt %>">
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </fieldset>
                             </li>
                         <% }) %>
+                        <li>
+                            <label for="filtro-nombre">Nombre del Producto</label>
+                            <input type="text" name="nombre" id="filtro-nombre" class="filtro">
+                        </li>
+                        <li>
+                            <label for="filtro-descripcion">Descripción</label>
+                            <input type="text" name="descripcion" id="filtro-descripcion" class="filtro">
+                        </li>
+                        <li>
+                            <label for="min-valorTotal">Precio</label>
+                            <input type="number" name="min-valorTotal" id="min-valorTotal" class="filtro" placeholder="mínimo" min="0" max="<%= productos.reduce((acc, item) => item.valorTotal > acc ? item.valorTotal : acc, 0) %>" style="margin-bottom: 5px; padding-left: 10px;">
+                            <input type="number" name="max-valorTotal" id="max-valorTotal" class="filtro" placeholder="máximo" min="0" max="<%= productos.reduce((acc, item) => item.valorTotal > acc ? item.valorTotal : acc, 0) %>" style="margin-top: 5px; padding-left: 10px;">
+                        </li>
                         <li>
                             <button class="btn-filtro">Filtrar</button>
                         </li>

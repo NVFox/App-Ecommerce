@@ -16,6 +16,10 @@
     <%- include('./partials/header', {pages: pages, isIndex: false, session: session}) %>
     
     <section class="real-section">
+        <% if ((!Object.keys(model).length || (model == "no existe")) && data.length === 0) { %>
+            <%- include('./partials/noEncontrado') %>
+        <% } %>
+
         <% if (Object.keys(model).length && !(model == "no existe")) { %>
             <div class="section">
 
